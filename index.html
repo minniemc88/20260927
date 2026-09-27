@@ -9,6 +9,7 @@
       --bg-color: #FFF9E6;        /* 奶油黃 */
       --primary-blue: #A2D2FF;    /* 馬卡龍藍 */
       --accent-yellow: #FFE599;   /* 鮮黃 Accent */
+      --line-green: #06C755;      /* LINE 品牌綠 */
       --text-color: #2B2D42;      /* 深藍黑 */
       --card-bg: #FFFFFF;
       --border-style: 3px solid #2B2D42;
@@ -21,7 +22,7 @@
       padding: 0;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation; /* 提升手機觸控反應，防止雙擊縮放 */
+      touch-action: manipulation;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -129,12 +130,20 @@
       display: block;
       width: 100%;
       outline: none;
+      text-decoration: none;
       -webkit-appearance: none;
     }
 
     .btn:active {
       transform: translate(2px, 2px);
       box-shadow: 2px 2px 0px #2B2D42;
+    }
+
+    /* LINE 專用綠色按鈕 */
+    .btn-line {
+      background: var(--line-green);
+      color: #FFFFFF;
+      margin-top: 15px;
     }
 
     /* 關卡一：怪獸區域 */
@@ -227,7 +236,7 @@
       color: #666;
     }
 
-    /* 輕量級飄字與動態特效（無圖層遮擋） */
+    /* 飄字與動態特效 */
     .pop-text {
       position: fixed;
       font-weight: bold;
@@ -325,11 +334,13 @@
       <div style="font-size: 48px; margin-bottom: 8px;">🎉🐶❤️</div>
       <h2>和好成功！</h2>
       <p style="color: #2B2D42; font-weight: bold; font-size: 15px;">
-        明天工作加油喔！<br>辛苦你了，等忙完再在一起放鬆～<br>記得今晚要早點休息，晚安！
+        明天工作加油喔！<br>辛苦你了，等忙完再一起當貼貼怪～<br>今晚要早點休息，晚安！
       </p>
-      <div style="font-size: 12px; color: #777; margin-top: 8px;">
-        （截圖這張卡片，週末隨時兌換大餐 🍽️）
-      </div>
+
+      <!-- 點擊自動傳送 LINE 訊息按鈕 -->
+      <a href="https://line.me/R/share?text=%E6%88%91%E5%B7%B2%E7%B6%93%E9%80%9A%E9%97%9C%E5%92%8C%E5%A5%BD%E4%BB%BB%E5%8B%99%E5%9B%89%EF%BD%9E%E2%9D%A4%EF%B8%8F%0A%E6%98%8E%E5%A4%A9%E4%BC%9A%E5%8A%A0%E2%9B%BD%EF%B8%8F%E7%B5%84%E5%B7%A5%E4%BD%9C%EF%BC%8C%E9%80%B1%E6%9C%AB%E8%A6%81%E5%85%96%E6%8F%9B%E5%AF%A6%E9%AB%94%E5%A4%A7%E5%B1%91%E5%B1%91%2B%E5%A4%A7%E9%A4%90%F0%9F%8D%B7%EF%B8%8F%EF%BC%81" class="btn btn-line">
+        📲 傳 LINE 回報女友並領取獎勵
+      </a>
     </div>
 
   </div>
@@ -338,7 +349,6 @@
     let angerLevel = 100;
     let defeatedMonsters = 0;
 
-    // 換頁函數
     function goToStep(stepNumber) {
       document.getElementById('step-intro').style.display = 'none';
       document.getElementById('step-1').style.display = 'none';
@@ -350,7 +360,6 @@
       if (stepNumber === 3) document.getElementById('step-3').style.display = 'block';
     }
 
-    // 更新進度條
     function updateAngerBar() {
       const bar = document.getElementById('progress-bar');
       const text = document.getElementById('anger-text');
@@ -358,7 +367,6 @@
       text.innerText = angerLevel + '%';
     }
 
-    // 飄字特效
     function showPopText(x, y, text) {
       const pop = document.createElement('div');
       pop.className = 'pop-text';
@@ -369,7 +377,6 @@
       setTimeout(() => pop.remove(), 800);
     }
 
-    // 初始化事件繫結
     document.addEventListener('DOMContentLoaded', function() {
 
       // 開始按鈕
@@ -427,7 +434,7 @@
         angerLevel = 0;
         updateAngerBar();
         
-        // 觸發愛心雨
+        // 觸發彩帶愛心雨
         for (let i = 0; i < 20; i++) {
           setTimeout(() => {
             showPopText(
