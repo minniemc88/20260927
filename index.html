@@ -2,14 +2,14 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>和好任務與加油能量站 ❤️</title>
   <style>
     :root {
       --bg-color: #FFF9E6;        /* 奶油黃 */
       --primary-blue: #A2D2FF;    /* 馬卡龍藍 */
-      --accent-yellow: #FFE599;   /* 鮮黃Accent */
-      --text-color: #2B2D42;      /* 深藍黑（手繪風格字體色） */
+      --accent-yellow: #FFE599;   /* 鮮黃 Accent */
+      --text-color: #2B2D42;      /* 深藍黑 */
       --card-bg: #FFFFFF;
       --border-style: 3px solid #2B2D42;
       --shadow-style: 4px 4px 0px #2B2D42;
@@ -21,6 +21,7 @@
       padding: 0;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation; /* 提升手機觸控反應，防止雙擊縮放 */
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -28,11 +29,13 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       padding: 16px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
       overflow-x: hidden;
       position: relative;
     }
@@ -40,14 +43,15 @@
     /* 頂部怒氣條 */
     .header-bar {
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
       background: var(--card-bg);
       border: var(--border-style);
       box-shadow: var(--shadow-style);
       border-radius: 16px;
       padding: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     .status-title {
@@ -60,12 +64,11 @@
 
     .progress-container {
       width: 100%;
-      height: 20px;
+      height: 18px;
       background: #EAEAEA;
       border: var(--border-style);
       border-radius: 10px;
       overflow: hidden;
-      position: relative;
     }
 
     .progress-bar {
@@ -75,15 +78,14 @@
       transition: width 0.3s ease;
     }
 
-    /* 容器與卡片 */
+    /* 主遊戲區域 */
     .game-container {
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      position: relative;
     }
 
     .card {
@@ -91,42 +93,43 @@
       border: var(--border-style);
       box-shadow: var(--shadow-style);
       border-radius: 20px;
-      padding: 24px 20px;
+      padding: 20px 16px;
       text-align: center;
-      position: relative;
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.3s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
-      font-size: 20px;
-      margin-bottom: 12px;
+      font-size: 19px;
+      margin-bottom: 10px;
     }
 
     p {
-      font-size: 15px;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 16px;
       color: #555;
     }
 
-    /* 按鈕通用樣式 */
+    /* 通用按鈕 */
     .btn {
       background: var(--primary-blue);
       border: var(--border-style);
       box-shadow: var(--shadow-style);
       border-radius: 12px;
-      padding: 12px 24px;
+      padding: 14px 20px;
       font-size: 16px;
       font-weight: bold;
       color: var(--text-color);
       cursor: pointer;
-      transition: transform 0.1s;
-      display: inline-block;
+      display: block;
+      width: 100%;
+      outline: none;
+      -webkit-appearance: none;
     }
 
     .btn:active {
@@ -134,64 +137,48 @@
       box-shadow: 2px 2px 0px #2B2D42;
     }
 
-    /* 關卡一：打怪獸區域 */
+    /* 關卡一：怪獸區域 */
     .monster-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .monster-btn {
       background: #FFF;
       border: var(--border-style);
       box-shadow: var(--shadow-style);
-      border-radius: 16px;
-      padding: 16px 10px;
-      font-size: 15px;
+      border-radius: 14px;
+      padding: 14px 8px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
+      gap: 6px;
+      outline: none;
     }
 
     .monster-btn .icon {
-      font-size: 28px;
+      font-size: 26px;
     }
 
     .monster-btn.defeated {
       opacity: 0.3;
-      transform: scale(0.9);
+      transform: scale(0.92);
       box-shadow: none;
       pointer-events: none;
       background: #EAEAEA;
-    }
-
-    /* 飄字特效 */
-    .pop-text {
-      position: absolute;
-      font-weight: bold;
-      font-size: 16px;
-      color: #FF5964;
-      pointer-events: none;
-      animation: floatUp 0.8s forwards ease-out;
-      z-index: 99;
-    }
-
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(-30px) scale(1.2); }
     }
 
     /* 關卡二：飲品按鈕 */
     .drink-container {
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
     .drink-btn {
@@ -199,14 +186,18 @@
       border: var(--border-style);
       box-shadow: var(--shadow-style);
       border-radius: 50%;
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 30px;
       cursor: pointer;
+    }
+
+    .drink-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #2B2D42;
     }
 
     /* 關卡三：和好憑證 */
@@ -214,45 +205,46 @@
       background: #FFF9E6;
       border: 2px dashed #2B2D42;
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
       text-align: left;
-      margin-bottom: 20px;
-      font-size: 14px;
-      line-height: 1.8;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.7;
     }
 
     .contract-card ol {
-      padding-left: 20px;
+      padding-left: 18px;
     }
 
     .btn-group {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      position: relative;
-      min-height: 100px;
+      gap: 10px;
     }
 
     .btn-no {
       background: #EAEAEA;
-      color: #777;
+      color: #666;
     }
 
-    /* 滿屏彩帶 Canvas */
-    #canvas {
+    /* 輕量級飄字與動態特效（無圖層遮擋） */
+    .pop-text {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      font-weight: bold;
+      font-size: 18px;
+      color: #FF5964;
       pointer-events: none;
-      z-index: 999;
+      animation: floatUp 0.8s forwards ease-out;
+      z-index: 9999;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-35px) scale(1.2); }
     }
   </style>
 </head>
 <body>
-
-  <canvas id="canvas"></canvas>
 
   <!-- 頂部進度條 -->
   <div class="header-bar">
@@ -269,10 +261,10 @@
     
     <!-- 開頭/前言 -->
     <div id="step-intro" class="card">
-      <div style="font-size: 40px; margin-bottom: 10px;">🐶🐾</div>
+      <div style="font-size: 40px; margin-bottom: 8px;">🐶🐾</div>
       <h2>糟糕！發現小衝突！</h2>
-      <p>今天因為誤會發生了小吵架事件…<br>為了修復關係並給明天辛苦上班的你加油，請完成以下和好任務、補充能量吧！</p>
-      <button class="btn" onclick="goToStep(1)">開始破冰任務 🚀</button>
+      <p>今天因為誤會發生了小吵架事件…<br>為了修復關係並給明天辛苦上班的你加油，請完成以下和好任務吧！</p>
+      <button class="btn" id="start-btn">開始破冰任務 🚀</button>
     </div>
 
     <!-- 關卡一：消消氣 -->
@@ -280,19 +272,19 @@
       <h2>關卡 1：點擊消滅「氣頭怪獸」</h2>
       <p>點擊把剛才的不好情緒全部消除掉！</p>
       <div class="monster-grid">
-        <button class="monster-btn" onclick="defeatMonster(this, '溝通誤會', '對不起嘛～')">
+        <button class="monster-btn" data-msg="對不起嘛～">
           <span class="icon">👾</span>
           <span>溝通誤會</span>
         </button>
-        <button class="monster-btn" onclick="defeatMonster(this, '一時急了', '我不該急的！')">
+        <button class="monster-btn" data-msg="我不該急的！">
           <span class="icon">💥</span>
           <span>一時急了</span>
         </button>
-        <button class="monster-btn" onclick="defeatMonster(this, '講話太衝', '消氣消氣～')">
+        <button class="monster-btn" data-msg="消氣消氣～">
           <span class="icon">🔥</span>
           <span>講話太衝</span>
         </button>
-        <button class="monster-btn" onclick="defeatMonster(this, '小疙瘩', '抱抱一個！')">
+        <button class="monster-btn" data-msg="抱抱一個！">
           <span class="icon">🌧️</span>
           <span>小疙瘩</span>
         </button>
@@ -304,11 +296,11 @@
       <h2>關卡 2：明日工作能量補給站</h2>
       <p>明天工作那麼辛苦，先補充點甜份，不氣不氣囉！點擊飲料注入能量：</p>
       <div class="drink-container">
-        <div class="drink-btn" onclick="addEnergy('🧋 特調冰奶茶')">🧋</div>
-        <div class="drink-btn" onclick="addEnergy('☕ 冰美式咖啡')">☕</div>
-        <div class="drink-btn" onclick="addEnergy('🫂 遠端大抱抱')">🫂</div>
+        <div class="drink-btn">🧋</div>
+        <div class="drink-btn">☕</div>
+        <div class="drink-btn">🫂</div>
       </div>
-      <p style="font-size: 13px; color: #888;">（點擊任意補充包解鎖最終關卡）</p>
+      <p style="font-size: 12px; color: #888; margin-bottom: 0;">（點擊任意補充包解鎖最終關卡）</p>
     </div>
 
     <!-- 關卡三：和好憑證 -->
@@ -323,19 +315,19 @@
         </ol>
       </div>
       <div class="btn-group">
-        <button class="btn" onclick="finishGame()">【同意和好並領取抱抱】 ❤️</button>
-        <button class="btn btn-no" id="btn-no" onclick="handleNoBtn()">【我還在考慮...】</button>
+        <button class="btn" id="finish-btn">【同意和好並領取抱抱】 ❤️</button>
+        <button class="btn btn-no" id="btn-no">【我還在考慮...】</button>
       </div>
     </div>
 
     <!-- 終點通關畫面 -->
     <div id="step-final" class="card" style="display: none;">
-      <div style="font-size: 50px; margin-bottom: 10px;">🎉🐶❤️</div>
+      <div style="font-size: 48px; margin-bottom: 8px;">🎉🐶❤️</div>
       <h2>和好成功！</h2>
-      <p style="color: #2B2D42; font-weight: bold; font-size: 16px;">
+      <p style="color: #2B2D42; font-weight: bold; font-size: 15px;">
         明天工作加油喔！<br>辛苦你了，等忙完再在一起放鬆～<br>記得今晚要早點休息，晚安！
       </p>
-      <div style="font-size: 13px; color: #777; margin-top: 10px;">
+      <div style="font-size: 12px; color: #777; margin-top: 8px;">
         （截圖這張卡片，週末隨時兌換大餐 🍽️）
       </div>
     </div>
@@ -346,7 +338,7 @@
     let angerLevel = 100;
     let defeatedMonsters = 0;
 
-    // 換頁邏輯
+    // 換頁函數
     function goToStep(stepNumber) {
       document.getElementById('step-intro').style.display = 'none';
       document.getElementById('step-1').style.display = 'none';
@@ -358,25 +350,7 @@
       if (stepNumber === 3) document.getElementById('step-3').style.display = 'block';
     }
 
-    // 第一關：打怪獸
-    function defeatMonster(btn, type, popMsg) {
-      btn.classList.add('defeated');
-      defeatedMonsters++;
-      
-      // 減少怒氣值
-      angerLevel -= 25;
-      updateAngerBar();
-
-      // 產生飄字特效
-      showPopText(btn, popMsg);
-
-      if (defeatedMonsters >= 4) {
-        setTimeout(() => {
-          goToStep(2);
-        }, 800);
-      }
-    }
-
+    // 更新進度條
     function updateAngerBar() {
       const bar = document.getElementById('progress-bar');
       const text = document.getElementById('anger-text');
@@ -384,8 +358,88 @@
       text.innerText = angerLevel + '%';
     }
 
-    // 飄字效果
-    function showPopText(element, text) {
-      const rect = element.getBoundingClientRect();
+    // 飄字特效
+    function showPopText(x, y, text) {
       const pop = document.createElement('div');
-      pop.className 
+      pop.className = 'pop-text';
+      pop.innerText = text;
+      pop.style.left = (x - 30) + 'px';
+      pop.style.top = (y - 20) + 'px';
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 800);
+    }
+
+    // 初始化事件繫結
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // 開始按鈕
+      document.getElementById('start-btn').addEventListener('click', function() {
+        goToStep(1);
+      });
+
+      // 關卡一：打怪獸
+      const monsterBtns = document.querySelectorAll('.monster-btn');
+      monsterBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          if (this.classList.contains('defeated')) return;
+          this.classList.add('defeated');
+          defeatedMonsters++;
+          angerLevel -= 25;
+          updateAngerBar();
+
+          const rect = this.getBoundingClientRect();
+          showPopText(rect.left + rect.width / 2, rect.top, this.getAttribute('data-msg'));
+
+          if (defeatedMonsters >= 4) {
+            setTimeout(() => { goToStep(2); }, 600);
+          }
+        });
+      });
+
+      // 關卡二：飲品按鈕
+      const drinkBtns = document.querySelectorAll('.drink-btn');
+      drinkBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const rect = this.getBoundingClientRect();
+          showPopText(rect.left + rect.width / 2, rect.top, '❤️ 能量+100');
+          setTimeout(() => { goToStep(3); }, 800);
+        });
+      });
+
+      // 關卡三：考慮中按鈕
+      let noClickCount = 0;
+      const noBtn = document.getElementById('btn-no');
+      noBtn.addEventListener('click', function() {
+        noClickCount++;
+        if (noClickCount === 1) {
+          this.innerText = '不行考慮太久！快按同意～';
+        } else if (noClickCount === 2) {
+          this.innerText = '真的不能考慮了啦！';
+        } else {
+          this.style.display = 'none';
+        }
+      });
+
+      // 完成和好
+      document.getElementById('finish-btn').addEventListener('click', function() {
+        document.getElementById('step-3').style.display = 'none';
+        document.getElementById('step-final').style.display = 'block';
+        angerLevel = 0;
+        updateAngerBar();
+        
+        // 觸發愛心雨
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            showPopText(
+              Math.random() * (window.innerWidth - 60) + 30,
+              Math.random() * (window.innerHeight / 2) + 100,
+              ['🎉', '❤️', '✨', '💖'][Math.floor(Math.random() * 4)]
+            );
+          }, i * 80);
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
